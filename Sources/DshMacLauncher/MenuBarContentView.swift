@@ -32,16 +32,9 @@ struct MenuBarContentView: View {
 
             if let url = service.state.url, service.state.phase == .running {
                 HStack {
-                    Link(destination: url) {
-                        HStack(spacing: 4) {
-                            Text(url.absoluteString)
-                                .lineLimit(1)
-                            Image(systemName: "arrow.up.right.square")
-                        }
-                    }
-                    .font(.caption.monospaced())
-                    .help("在浏览器中打开 DSH")
-                    .accessibilityIdentifier("serviceURLLink")
+                    Text(url.absoluteString)
+                        .font(.caption.monospaced())
+                        .lineLimit(1)
                     Spacer()
                     Button { model.copyServiceURL() } label: {
                         Image(systemName: "doc.on.doc")
