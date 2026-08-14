@@ -18,7 +18,7 @@ jobs:
     env:
       RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build runtime bundle
         run: Scripts/build-runtime.sh dist
       - name: Import Developer ID certificate
@@ -78,4 +78,3 @@ jobs:
             dist/dsh-runtime-arm64.zip \
             dist/runtime-manifest.json \
             --clobber
-
