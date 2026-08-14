@@ -56,9 +56,12 @@ public final class LauncherSettingsStore: ObservableObject {
         value.recentWorkspaces.first.map { URL(fileURLWithPath: $0, isDirectory: true) }
     }
 
+    public func resolvedWorkspaceURL(default defaultURL: URL) -> URL {
+        selectedWorkspaceURL ?? defaultURL
+    }
+
     private func persist() {
         guard let data = try? JSONEncoder().encode(value) else { return }
         defaults.set(data, forKey: storageKey)
     }
 }
-

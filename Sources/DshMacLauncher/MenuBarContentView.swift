@@ -95,8 +95,8 @@ struct MenuBarContentView: View {
                 Button("选择其他目录…") { model.chooseWorkspace() }
             } label: {
                 Label(
-                    model.selectedWorkspace?.lastPathComponent ?? "选择工作区",
-                    systemImage: "folder"
+                    model.selectedWorkspace?.lastPathComponent ?? "主目录（默认）",
+                    systemImage: model.selectedWorkspace == nil ? "house" : "folder"
                 )
                 .lineLimit(1)
             }
@@ -182,4 +182,3 @@ struct MenuBarContentView: View {
         }
     }
 }
-

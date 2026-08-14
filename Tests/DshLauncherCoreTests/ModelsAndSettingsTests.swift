@@ -57,5 +57,19 @@ final class ModelsAndSettingsTests: XCTestCase {
         store.update { $0.preferredPort = 100_000 }
         XCTAssertEqual(store.value.preferredPort, 65_535)
     }
-}
 
+    @MainActor
+    func testWorkspaceFallsBackToProvidedDefault() {
+        let suite = "WorkspaceFallbackTests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = LauncherSettingsStore(defaults: defaults)
+        let home = URL(fileURLWithPath: "/Users/test", isDirectory: true)
+
+        XCTAssertEqual(store.resolvedWorkspaceURL(default: home), home)
+
+        let selected = URL(fileURLWithPath: "/tmp/project", isDirectory: true)
+        store.addRecentWorkspace(selected)
+        XCTAssertEqual(store.resolvedWorkspaceURL(default: home), selected)
+    }
+}

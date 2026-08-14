@@ -16,7 +16,7 @@ struct DiagnosticsView: View {
                 LabeledContent("DSH", value: snapshot.dshVersion ?? "未安装")
                 LabeledContent("服务状态", value: snapshot.servicePhase.rawValue)
                 LabeledContent("服务地址", value: snapshot.serviceURL ?? "—")
-                LabeledContent("工作区", value: snapshot.workspacePath ?? "未选择")
+                LabeledContent("工作区", value: snapshot.workspacePath ?? "主目录")
                 LabeledContent("Web profile", value: snapshot.webProfileExists ? "已初始化" : "首次启动时创建")
             }
             .formStyle(.grouped)

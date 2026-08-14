@@ -33,9 +33,9 @@ struct OnboardingView: View {
             }
 
             setupRow(
-                icon: model.selectedWorkspace == nil ? "folder" : "checkmark.circle.fill",
-                title: "默认工作区",
-                detail: model.selectedWorkspace?.path ?? "尚未选择"
+                icon: model.selectedWorkspace == nil ? "house.fill" : "checkmark.circle.fill",
+                title: "工作区（可选）",
+                detail: model.selectedWorkspace?.path ?? "默认使用主目录：\(model.workspace.path)"
             ) {
                 Button("选择…") { model.chooseWorkspace() }
             }
@@ -61,7 +61,7 @@ struct OnboardingView: View {
                     Task { await model.completeOnboardingAndStart() }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(!model.isRuntimeReady || model.selectedWorkspace == nil || model.isBusy)
+                .disabled(!model.isRuntimeReady || model.isBusy)
             }
         }
         .padding(28)
@@ -109,4 +109,3 @@ struct OnboardingView: View {
         FileManager.default.fileExists(atPath: model.paths.dshHomeURL.path)
     }
 }
-

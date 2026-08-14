@@ -43,6 +43,10 @@ final class AppModel: ObservableObject {
         settings.selectedWorkspaceURL
     }
 
+    var workspace: URL {
+        settings.resolvedWorkspaceURL(default: FileManager.default.homeDirectoryForCurrentUser)
+    }
+
     var isRuntimeReady: Bool {
         runtime.activeInstallation != nil
     }
@@ -71,7 +75,7 @@ final class AppModel: ObservableObject {
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
-        panel.directoryURL = selectedWorkspace ?? FileManager.default.homeDirectoryForCurrentUser
+        panel.directoryURL = workspace
         if panel.runModal() == .OK, let url = panel.url {
             settings.addRecentWorkspace(url)
         }
@@ -102,11 +106,6 @@ final class AppModel: ObservableObject {
             AppWindows.shared.showOnboarding(model: self)
             return
         }
-        guard let workspace = selectedWorkspace else {
-            chooseWorkspace()
-            return
-        }
-
         isBusy = true
         errorMessage = nil
         defer { isBusy = false }
@@ -144,8 +143,7 @@ final class AppModel: ObservableObject {
 
     func restartService() async {
         guard !isBusy,
-              let installation = runtime.activeInstallation,
-              let workspace = selectedWorkspace else { return }
+              let installation = runtime.activeInstallation else { return }
         isBusy = true
         errorMessage = nil
         defer { isBusy = false }
@@ -239,7 +237,7 @@ final class AppModel: ObservableObject {
             nodeVersion: installation?.manifest.nodeVersion,
             dshVersion: installation?.manifest.dshVersion,
             architecture: RuntimeArchitecture.current,
-            workspacePath: selectedWorkspace?.path,
+            workspacePath: workspace.path,
             servicePhase: service.state.phase,
             serviceURL: service.state.url?.absoluteString,
             dshHomePath: paths.dshHomeURL.path,
