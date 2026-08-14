@@ -11,6 +11,14 @@ private struct OwnedProcess: Codable {
     let ownsProcessGroup: Bool
 }
 
+private final class WeakServiceController: @unchecked Sendable {
+    weak var value: ServiceController?
+
+    init(_ value: ServiceController) {
+        self.value = value
+    }
+}
+
 @MainActor
 public final class ServiceController: ObservableObject {
     @Published public private(set) var state = ServiceState(phase: .stopped)
@@ -98,15 +106,17 @@ public final class ServiceController: ObservableObject {
         process.standardOutput = outputPipe
         process.standardError = outputPipe
 
-        outputPipe.fileHandleForReading.readabilityHandler = { [weak self] handle in
+        let weakController = WeakServiceController(self)
+        outputPipe.fileHandleForReading.readabilityHandler = { handle in
             let data = handle.availableData
             guard !data.isEmpty else { return }
             let output = String(decoding: data, as: UTF8.self)
-            Task { @MainActor in self?.consumeOutput(output) }
+            Task { @MainActor in weakController.value?.consumeOutput(output) }
         }
 
-        process.terminationHandler = { [weak self] completed in
-            Task { @MainActor in self?.processDidTerminate(completed) }
+        process.terminationHandler = { completed in
+            let status = completed.terminationStatus
+            Task { @MainActor in weakController.value?.processDidTerminate(status: status) }
         }
 
         do {
@@ -197,14 +207,14 @@ public final class ServiceController: ObservableObject {
         state.url = URL(string: String(match[separator.lowerBound...]))
     }
 
-    private func processDidTerminate(_ completed: Process) {
-        if let pipe = completed.standardOutput as? Pipe {
+    private func processDidTerminate(status: Int32) {
+        if let pipe = process?.standardOutput as? Pipe {
             pipe.fileHandleForReading.readabilityHandler = nil
         }
         process = nil
         clearOwnedProcess()
         guard !expectedStop else { return }
-        let message = "DSH exited with status \(completed.terminationStatus)."
+        let message = "DSH exited with status \(status)."
         logs.append("\n\(message)\n")
         state = ServiceState(phase: .failed, message: message)
     }
