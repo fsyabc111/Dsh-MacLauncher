@@ -15,7 +15,7 @@ final class PortResolverTests: XCTestCase {
         address.sin_addr = in_addr(s_addr: inet_addr("127.0.0.1"))
         let bindResult = withUnsafePointer(to: &address) { pointer in
             pointer.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                bind(descriptor, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
+                Darwin.bind(descriptor, $0, socklen_t(MemoryLayout<sockaddr_in>.size))
             }
         }
         XCTAssertEqual(bindResult, 0)
@@ -33,4 +33,3 @@ final class PortResolverTests: XCTestCase {
         XCTAssertThrowsError(try PortResolver.launchPort(mode: .fixed, preferredPort: port))
     }
 }
-
