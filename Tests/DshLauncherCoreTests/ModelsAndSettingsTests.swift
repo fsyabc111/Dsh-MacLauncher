@@ -72,4 +72,33 @@ final class ModelsAndSettingsTests: XCTestCase {
         store.addRecentWorkspace(selected)
         XCTAssertEqual(store.resolvedWorkspaceURL(default: home), selected)
     }
+
+    func testSettingsDecodeToleratesMissingNewKeys() throws {
+        // JSON persisted by an older launcher version: no extraPathEntries.
+        let legacyJSON = """
+        {"portMode":"fixed","preferredPort":4321,"openBrowserAfterStart":false,
+         "launchAtLogin":true,"startServiceAtLogin":true,
+         "recentWorkspaces":["/tmp/a"],"didCompleteOnboarding":true}
+        """
+        let decoded = try JSONDecoder().decode(
+            LauncherSettings.self,
+            from: Data(legacyJSON.utf8)
+        )
+        XCTAssertEqual(decoded.portMode, .fixed)
+        XCTAssertEqual(decoded.preferredPort, 4321)
+        XCTAssertEqual(decoded.openBrowserAfterStart, false)
+        XCTAssertEqual(decoded.launchAtLogin, true)
+        XCTAssertEqual(decoded.startServiceAtLogin, true)
+        XCTAssertEqual(decoded.recentWorkspaces, ["/tmp/a"])
+        XCTAssertEqual(decoded.didCompleteOnboarding, true)
+        XCTAssertEqual(decoded.extraPathEntries, [])
+    }
+
+    func testSettingsRoundTripPreservesExtraPathEntries() throws {
+        var settings = LauncherSettings()
+        settings.extraPathEntries = ["/opt/tools/bin", "/srv/bin"]
+        let data = try JSONEncoder().encode(settings)
+        let decoded = try JSONDecoder().decode(LauncherSettings.self, from: data)
+        XCTAssertEqual(decoded.extraPathEntries, ["/opt/tools/bin", "/srv/bin"])
+    }
 }

@@ -9,8 +9,26 @@ public struct LauncherSettings: Codable, Equatable, Sendable {
     public var startServiceAtLogin = false
     public var recentWorkspaces: [String] = []
     public var didCompleteOnboarding = false
+    /// Extra PATH directories appended to the DSH service process environment,
+    /// so tools spawned by the web server (pnpm, npm, ...) resolve regardless
+    /// of how the launcher itself was started.
+    public var extraPathEntries: [String] = []
 
     public init() {}
+
+    /// Decodes with per-field fallbacks so settings persisted by older
+    /// launcher versions (which lack newer keys) keep their values.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        portMode = try container.decodeIfPresent(PortMode.self, forKey: .portMode) ?? .automatic
+        preferredPort = try container.decodeIfPresent(Int.self, forKey: .preferredPort) ?? 3080
+        openBrowserAfterStart = try container.decodeIfPresent(Bool.self, forKey: .openBrowserAfterStart) ?? true
+        launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? false
+        startServiceAtLogin = try container.decodeIfPresent(Bool.self, forKey: .startServiceAtLogin) ?? false
+        recentWorkspaces = try container.decodeIfPresent([String].self, forKey: .recentWorkspaces) ?? []
+        didCompleteOnboarding = try container.decodeIfPresent(Bool.self, forKey: .didCompleteOnboarding) ?? false
+        extraPathEntries = try container.decodeIfPresent([String].self, forKey: .extraPathEntries) ?? []
+    }
 }
 
 @MainActor

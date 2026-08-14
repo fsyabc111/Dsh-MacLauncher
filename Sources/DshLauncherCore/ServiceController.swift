@@ -69,7 +69,8 @@ public final class ServiceController: ObservableObject {
         runtime: RuntimeInstallation,
         workspace: URL,
         portMode: PortMode,
-        preferredPort: Int
+        preferredPort: Int,
+        extraPathEntries: [String] = []
     ) async throws {
         guard state.phase != .starting, state.phase != .running else { return }
         var isDirectory: ObjCBool = false
@@ -102,6 +103,15 @@ public final class ServiceController: ObservableObject {
         var environment = ProcessInfo.processInfo.environment
         environment["DSH_HOME"] = paths.dshHomeURL.path
         environment["NO_COLOR"] = "1"
+        // GUI apps inherit launchd's minimal PATH; compose one that also
+        // carries the runtime node bin and well-known user tool dirs so the
+        // web server's child processes (pnpm, npm, node, ...) resolve.
+        environment["PATH"] = ChildEnvironment.path(
+            nodeBinDirectory: runtime.nodeExecutable.deletingLastPathComponent(),
+            existingPath: environment["PATH"],
+            extraEntries: extraPathEntries,
+            fileManager: fileManager
+        )
         process.environment = environment
         process.standardOutput = outputPipe
         process.standardError = outputPipe
@@ -173,14 +183,16 @@ public final class ServiceController: ObservableObject {
         runtime: RuntimeInstallation,
         workspace: URL,
         portMode: PortMode,
-        preferredPort: Int
+        preferredPort: Int,
+        extraPathEntries: [String] = []
     ) async throws {
         await stop()
         try await start(
             runtime: runtime,
             workspace: workspace,
             portMode: portMode,
-            preferredPort: preferredPort
+            preferredPort: preferredPort,
+            extraPathEntries: extraPathEntries
         )
     }
 

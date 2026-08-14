@@ -114,7 +114,8 @@ final class AppModel: ObservableObject {
                 runtime: installation,
                 workspace: workspace,
                 portMode: settings.value.portMode,
-                preferredPort: settings.value.preferredPort
+                preferredPort: settings.value.preferredPort,
+                extraPathEntries: settings.value.extraPathEntries
             )
             runtime.confirmActiveRuntime()
             if settings.value.openBrowserAfterStart, let url = service.state.url {
@@ -152,7 +153,8 @@ final class AppModel: ObservableObject {
                 runtime: installation,
                 workspace: workspace,
                 portMode: settings.value.portMode,
-                preferredPort: settings.value.preferredPort
+                preferredPort: settings.value.preferredPort,
+                extraPathEntries: settings.value.extraPathEntries
             )
             if settings.value.openBrowserAfterStart, let url = service.state.url {
                 NSWorkspace.shared.open(url)

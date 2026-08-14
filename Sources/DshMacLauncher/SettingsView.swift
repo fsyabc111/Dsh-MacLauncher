@@ -31,6 +31,13 @@ struct SettingsView: View {
             )
             Toggle("登录后自动启动 DSH", isOn: binding(\.startServiceAtLogin))
 
+            Section("进程环境") {
+                TextField("额外的 PATH 目录（冒号分隔）", text: extraPathBinding)
+                Text("DSH Web 子进程（pnpm、npm 等）会继承这些目录。例如 ~/.npm-global/bin")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             LabeledContent("DSH 配置") {
                 Text(model.paths.dshHomeURL.path).font(.caption.monospaced())
             }
@@ -46,6 +53,20 @@ struct SettingsView: View {
         Binding(
             get: { settings.value[keyPath: keyPath] },
             set: { newValue in settings.update { $0[keyPath: keyPath] = newValue } }
+        )
+    }
+
+    private var extraPathBinding: Binding<String> {
+        Binding(
+            get: { settings.value.extraPathEntries.joined(separator: ":") },
+            set: { newValue in
+                let entries = newValue
+                    .split(separator: ":", omittingEmptySubsequences: true)
+                    .map(String.init)
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .filter { !$0.isEmpty }
+                settings.update { $0.extraPathEntries = entries }
+            }
         )
     }
 }
