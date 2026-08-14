@@ -41,9 +41,9 @@ public enum DiagnosticsService {
     public static func export(
         snapshot: DiagnosticsSnapshot,
         logURLs: [URL],
-        destinationURL: URL,
-        fileManager: FileManager = .default
+        destinationURL: URL
     ) async throws {
+        let fileManager = FileManager.default
         let stagingURL = fileManager.temporaryDirectory.appendingPathComponent(
             "DSH-Launcher-Diagnostics-\(UUID().uuidString)",
             isDirectory: true

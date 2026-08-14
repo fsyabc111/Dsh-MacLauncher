@@ -58,11 +58,10 @@ final class RuntimeManagerIntegrationTests: XCTestCase {
         let archive = root.appendingPathComponent("runtime.zip")
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/ditto")
-        process.arguments = ["-c", "-k", source.path, archive.path]
+        process.arguments = ["-c", "-k", "--keepParent", source.path, archive.path]
         try process.run()
         process.waitUntilExit()
         XCTAssertEqual(process.terminationStatus, 0)
         return archive
     }
 }
-
