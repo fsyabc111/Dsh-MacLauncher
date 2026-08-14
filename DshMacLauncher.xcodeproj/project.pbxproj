@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,8 +23,10 @@
 		4FFBA348FE6F998E8BB62A83 /* AppWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74556DF1B84AA281750F1D9B /* AppWindows.swift */; };
 		52EF7B1806D52ED44576CEFE /* LauncherSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED816352F02EEAF7929808F5 /* LauncherSettingsStore.swift */; };
 		5F52B0BF8BAE08B20B4122F2 /* DshLauncherCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 44314C40303A7F4DD6276A13 /* DshLauncherCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		67A78828D608721C0DCBD327 /* RuntimeManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA0F01423BA5FF885B338D9C /* RuntimeManagerIntegrationTests.swift */; };
 		736DD4C08DB29675602C2F7B /* DshMacLauncherUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69D22257F69103ED5BE19A5 /* DshMacLauncherUITests.swift */; };
 		7777C9E07DF7D5C0453DF9CF /* DshMacLauncherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 340B15189788B4A638A5A35E /* DshMacLauncherApp.swift */; };
+		84A14EEF4D0E12112CCF162E /* ServiceControllerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B373366071995973864188 /* ServiceControllerIntegrationTests.swift */; };
 		90956FD51B7D0B8B6975765F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B426B7DB115C3E3E31891F5 /* OnboardingView.swift */; };
 		ADA703233E7E1A0E38AD2021 /* RuntimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78B8529ADAE74E18FFA9FF89 /* RuntimeManager.swift */; };
 		D597DEAE41D576DD559BAD66 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D5F9C27CF4FC238CD98CC2 /* Models.swift */; };
@@ -84,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		12B373366071995973864188 /* ServiceControllerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceControllerIntegrationTests.swift; sourceTree = "<group>"; };
 		12F39B24C6230CD08850413D /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		18C4CAE2F54593F97D12EBA5 /* PortResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortResolver.swift; sourceTree = "<group>"; };
 		2FF3C872379DFC682C396773 /* DshMacLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DshMacLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +108,7 @@
 		A10F343CFAA2A4489EB05349 /* DiagnosticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsTests.swift; sourceTree = "<group>"; };
 		A1662894E02C999843A9B70B /* DshLauncherCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DshLauncherCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A832CAD161952AD5D7B78A6C /* LogStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStoreTests.swift; sourceTree = "<group>"; };
+		BA0F01423BA5FF885B338D9C /* RuntimeManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RuntimeManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		C19283C1BE30ABA874A78DF8 /* DiagnosticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsService.swift; sourceTree = "<group>"; };
 		E69D22257F69103ED5BE19A5 /* DshMacLauncherUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DshMacLauncherUITests.swift; sourceTree = "<group>"; };
 		ED816352F02EEAF7929808F5 /* LauncherSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherSettingsStore.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 				A832CAD161952AD5D7B78A6C /* LogStoreTests.swift */,
 				7174FF62FEC55FF6A73E9525 /* ModelsAndSettingsTests.swift */,
 				69BDB6C5829C325A01381EA0 /* PortResolverTests.swift */,
+				BA0F01423BA5FF885B338D9C /* RuntimeManagerIntegrationTests.swift */,
+				12B373366071995973864188 /* ServiceControllerIntegrationTests.swift */,
 			);
 			path = DshLauncherCoreTests;
 			sourceTree = "<group>";
@@ -312,7 +318,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					274F5BA7CC5AF76ED50E0F67 = {
 						ProvisioningStyle = Automatic;
@@ -330,6 +336,7 @@
 				};
 			};
 			buildConfigurationList = ED62E51687FA29BCFD0C3541 /* Build configuration list for PBXProject "DshMacLauncher" */;
+			compatibilityVersion = "Xcode 15.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -338,7 +345,6 @@
 			);
 			mainGroup = 3DB5D7753DE745EA64710579;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A7C3FB835E1BA8AFDFAE4F3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -400,6 +406,8 @@
 				2974AD7CA647A40EE9A1E61D /* LogStoreTests.swift in Sources */,
 				092A43B48C83D594213E4AC4 /* ModelsAndSettingsTests.swift in Sources */,
 				03ADA38B219B24352B8B120B /* PortResolverTests.swift in Sources */,
+				67A78828D608721C0DCBD327 /* RuntimeManagerIntegrationTests.swift in Sources */,
+				84A14EEF4D0E12112CCF162E /* ServiceControllerIntegrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

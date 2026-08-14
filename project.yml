@@ -1,5 +1,7 @@
 name: DshMacLauncher
 options:
+  xcodeVersion: "15.4"
+  projectFormat: xcode15_3
   bundleIdPrefix: com.fsyabc111
   deploymentTarget:
     macOS: "13.0"
@@ -93,4 +95,3 @@ schemes:
       config: Debug
     archive:
       config: Release
-
