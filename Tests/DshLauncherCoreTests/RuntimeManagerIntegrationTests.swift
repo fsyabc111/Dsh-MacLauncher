@@ -5,6 +5,38 @@ import XCTest
 
 final class RuntimeManagerIntegrationTests: XCTestCase {
     @MainActor
+    func testLoadsLocalManifestOverride() async throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("RuntimeManifestTests-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        let manifest = RuntimeManifest(
+            schemaVersion: 1,
+            dshVersion: "0.1.0-local",
+            nodeVersion: "24-local",
+            architecture: RuntimeArchitecture.current,
+            archiveURL: root.appendingPathComponent("runtime.zip"),
+            archiveSize: 1,
+            sha256: String(repeating: "a", count: 64)
+        )
+        let manifestURL = root.appendingPathComponent("manifest.json")
+        try JSONEncoder().encode(manifest).write(to: manifestURL)
+        let manager = RuntimeManager(
+            manifestURL: manifestURL,
+            paths: LauncherPaths(
+                applicationSupportURL: root.appendingPathComponent("Application Support"),
+                logsURL: root.appendingPathComponent("Logs"),
+                dshHomeURL: root.appendingPathComponent(".dsh")
+            )
+        )
+
+        let loaded = try await manager.checkForUpdates()
+
+        XCTAssertEqual(loaded, manifest)
+        XCTAssertEqual(manager.availableManifest, manifest)
+    }
+
+    @MainActor
     func testInstallsAndActivatesValidatedRuntimeArchive() async throws {
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("RuntimeManagerTests-\(UUID().uuidString)", isDirectory: true)

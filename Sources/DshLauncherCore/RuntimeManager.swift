@@ -110,9 +110,15 @@ public final class RuntimeManager: ObservableObject {
 
     @discardableResult
     public func checkForUpdates() async throws -> RuntimeManifest {
-        let (data, response) = try await URLSession.shared.data(from: manifestURL)
-        if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
-            throw URLError(.badServerResponse)
+        let data: Data
+        if manifestURL.isFileURL {
+            data = try Data(contentsOf: manifestURL)
+        } else {
+            let (downloadedData, response) = try await URLSession.shared.data(from: manifestURL)
+            if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+                throw URLError(.badServerResponse)
+            }
+            data = downloadedData
         }
         let manifest = try JSONDecoder().decode(RuntimeManifest.self, from: data)
         try manifest.validate()
